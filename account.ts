@@ -4,6 +4,8 @@ import { Hex } from 'viem';
 // 1. import the privateKeyToAccount function from viem/accounts
 import { privateKeyToAccount } from 'viem/accounts';
 
+import { litClient } from './lit-client';
+
 // Validate and normalize PRIVATE_KEY
 const privateKeyRaw = process.env.PRIVATE_KEY;
 if (!privateKeyRaw) {
@@ -20,8 +22,24 @@ export const account = privateKeyToAccount(privateKey);
 
 export const authData = await ViemAccountAuthenticator.authenticate(account);
 
+const paymentManager = await litClient.getPaymentManager({
+    account // viem account instance
+});
+
+const pkpEthAddress = process.env.PKP_ETH_ADDRESS;
+if (!pkpEthAddress) {
+    throw new Error('PUBKEY environment variable is not set');
+}
+
+const result = await paymentManager.depositForUser({
+    amountInEth: '0.1',
+    userAddress: pkpEthAddress, // PKP ETH Address
+});
+
+console.log("Payment funding result: ", result);
+
 // Validate and normalize PUBKEY
-const pubkeyRaw = process.env.PUBKEY;
+const pubkeyRaw = process.env.PKP_PUBKEY;
 if (!pubkeyRaw) {
     throw new Error('PUBKEY environment variable is not set');
 }
