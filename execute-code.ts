@@ -14,6 +14,17 @@ console.log(`  Auth Method Type: ${authData.authMethodType}`);
 console.log(`  Auth Method ID: ${authData.authMethodId}`);
 console.log(`  Network: naga-test (Lit Protocol Testnet)`);
 
+/*
+const mintedPkpWithEoaAuth = await litClient.mintWithAuth({
+    account: account, // or walletClient depending on method
+    authData: authData,
+    scopes: ['sign-anything'],
+});
+
+console.log("mintedPkpWithEoaAuth:", JSON.stringify(mintedPkpWithEoaAuth, (key, value) =>
+    typeof value === 'bigint' ? value.toString() : value, 2));
+*/
+
 // Fund the PKP before executing code
 console.log('\n💰 Funding PKP...');
 const paymentManager = await litClient.getPaymentManager({
@@ -21,7 +32,7 @@ const paymentManager = await litClient.getPaymentManager({
 });
 
 const fundingResult = await paymentManager.depositForUser({
-    amountInEth: '1',
+    amountInEth: '.1',
     userAddress: pkpEthAddress!,
 });
 
